@@ -1,0 +1,44 @@
+[gd_scene load_steps=3 format=3 uid="uid://bs1xnfkbw1v1n"]
+
+[ext_resource type="PackedScene" uid="uid://dqvbbveoku8y" path="res://entities/RedBall.tscn" id="1_n4psk"]
+[ext_resource type="PackedScene" uid="uid://co0hbkbnvcc4t" path="res://entities/BlueBall.tscn" id="2_ej4tk"]
+
+[node name="Gameplay" type="Node2D"]
+
+[node name="RedBall" parent="." instance=ExtResource("1_n4psk")]
+position = Vector2(621, 116)
+rotation = 1.5708
+
+[node name="BlueBall" parent="." instance=ExtResource("2_ej4tk")]
+position = Vector2(176, 279)
+rotation = 1.42339
+slide_on_ceiling = false
+floor_stop_on_slope = false
+floor_block_on_wall = false
+
+[node name="BlueBall2" parent="." instance=ExtResource("2_ej4tk")]
+position = Vector2(832, 604)
+rotation = -1.57079
+slide_on_ceiling = false
+floor_stop_on_slope = false
+floor_block_on_wall = false
+
+[node name="RedBall2" parent="." instance=ExtResource("1_n4psk")]
+position = Vector2(293, 581)
+rotation = 1.5708
+
+[node name="BlueBall3" parent="." instance=ExtResource("2_ej4tk")]
+position = Vector2(965, 602)
+rotation = -0.102675
+scale = Vector2(1, 1)
+slide_on_ceiling = false
+floor_stop_on_slope = false
+floor_block_on_wall = false
+
+[node name="BlueBall4" parent="." instance=ExtResource("2_ej4tk")]
+position = Vector2(875, 222)
+rotation = 2.89022
+scale = Vector2(1, 1)
+slide_on_ceiling = false
+floor_stop_on_slope = false
+floor_block_on_wall = false

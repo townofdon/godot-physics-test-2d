@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://co0hbkbnvcc4t"]
+
+[ext_resource type="PackedScene" uid="uid://dqvbbveoku8y" path="res://entities/RedBall.tscn" id="1_58yx1"]
+
+[node name="BlueBall" instance=ExtResource("1_58yx1")]
+speed = 151.0
+
+[node name="Sprite2D" parent="." index="0"]
+frame = 1
