@@ -10,27 +10,29 @@ class_name Entity
 var frame_count := 0
 var last_collision_entity: Entity
 
+var direction := Vector2.ZERO
+var forces: Array[ForceOverTime] = []
+
 func _ready() -> void:
-	var direction: Vector2 = (marker.global_position - global_position).normalized()
+	var init_direction: Vector2 = (marker.global_position - global_position).normalized()
+	direction = init_direction
 	velocity = direction * speed
 
 func _physics_process(delta: float) -> void:
-	#move_and_slide()
-	#for i in get_slide_collision_count():
-		#var collision := get_slide_collision(i)
-		#var otherCollider := collision.get_collider()
-		#if (otherCollider is Entity):
-			#_collide_with_entity(collision.get_collider(), collision)
-		#else:
-			## assume other collider is a static object
-			#var rebound := velocity.bounce(collision.get_normal())
-			#velocity = rebound * bounce
+	# handle external forces
+	var external_velocity := Vector2.ZERO
+	var t := 0.0
+	for force in forces:
+		external_velocity += force.get_value()
+		t += force.get_t()
+	velocity = lerp(direction * speed, external_velocity, clamp(t, 0, 1))
+
 	var collision := move_and_collide(velocity * delta)
-	
+
 	if (last_collision_entity && (!collision || collision.get_collider() != last_collision_entity)):
 		remove_collision_exception_with(last_collision_entity)
 		last_collision_entity = null
-	
+
 	if (collision):
 		var otherCollider := collision.get_collider()
 		if (otherCollider is Entity):
@@ -39,7 +41,15 @@ func _physics_process(delta: float) -> void:
 			# assume other collider is a static object
 			var rebound := velocity.bounce(collision.get_normal())
 			velocity = rebound * bounce
+
 	frame_count += 1
+	for force in forces:
+		force.tick(delta)
+
+	for i in range(forces.size()-1, -1, -1):
+		var force:ForceOverTime = forces[i]
+		if (!force): continue
+		if (force.is_completed()): forces.remove_at(i)
 
 # calculate zero momentum frame
 # see: https://isaacphysics.org/concepts/cp_collisions
@@ -68,3 +78,6 @@ func _collide_with_entity(other: Entity, collision: KinematicCollision2D) -> voi
 	var vb := vb_zmf + zmf
 	self.velocity = va * self.bounce
 	other.velocity = vb * other.bounce
+
+	self.forces.append(ForceOverTime.new(self.velocity, 1))
+	other.forces.append(ForceOverTime.new(other.velocity, 1))
