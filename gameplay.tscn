@@ -1,9 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://bs1xnfkbw1v1n"]
+[gd_scene load_steps=4 format=3 uid="uid://bs1xnfkbw1v1n"]
 
 [ext_resource type="PackedScene" uid="uid://dqvbbveoku8y" path="res://entities/RedBall.tscn" id="1_n4psk"]
+[ext_resource type="Script" uid="uid://2nft2qu6dwhx" path="res://gameplay.gd" id="1_oe8ih"]
 [ext_resource type="PackedScene" uid="uid://co0hbkbnvcc4t" path="res://entities/BlueBall.tscn" id="2_ej4tk"]
 
 [node name="Gameplay" type="Node2D"]
+script = ExtResource("1_oe8ih")
 
 [node name="RedBall" parent="." instance=ExtResource("1_n4psk")]
 position = Vector2(621, 116)

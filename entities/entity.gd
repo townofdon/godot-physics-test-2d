@@ -58,7 +58,7 @@ func _calc_zmf(a: Entity, b: Entity) -> Vector2:
 
 func _collide_with_entity(other: Entity, collision: KinematicCollision2D) -> void:
 	var collision_magnitude := (self.velocity - other.velocity).length()
-	print(collision_magnitude)
+	# TODO: factor collision_magnitude into damage
 	# ignore the collider for one frame
 	last_collision_entity = other
 	add_collision_exception_with(last_collision_entity)
