@@ -6,9 +6,19 @@ class_name Gameplay
 @onready var red = preload("res://entities/RedBall.tscn")
 @onready var blue = preload("res://entities/BlueBall.tscn")
 @onready var camera = $Camera2D
+@onready var marker_center = $marker_center
+@onready var marker_pos = $marker_pos
+
+func _ready() -> void:
+	camera.position = get_viewport_rect().get_center()
 
 func _process(delta: float) -> void:
-	var pos := get_viewport().get_mouse_position()
+	var pos:Vector2 = (get_viewport().get_mouse_position() - get_viewport_rect().get_center()) / camera.zoom.x + camera.global_position
+	var center:Vector2 = camera.global_position
+
+	marker_center.global_position = center
+	marker_pos.global_position = pos
+
 	var mouse_down := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
 	var shift_pressed := Input.is_action_pressed("shift")
 	if mouse_down:
@@ -18,8 +28,6 @@ func _process(delta: float) -> void:
 		else:
 			node = red.instantiate()
 		self.add_child(node)
-		var rect := get_viewport_rect()
-		var center := rect.get_center()
 		var direction:Vector2 = (center - pos).normalized()
 		node.global_position = pos
 		node.direction = direction

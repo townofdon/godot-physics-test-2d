@@ -7,6 +7,20 @@ script = ExtResource("1_oe8ih")
 camera_move_speed = 500
 
 [node name="Camera2D" type="Camera2D" parent="."]
-anchor_mode = 0
 position_smoothing_enabled = true
 position_smoothing_speed = 20.0
+
+[node name="marker_center" type="Marker2D" parent="."]
+position = Vector2(580, 319)
+
+[node name="Polygon2D" type="Polygon2D" parent="marker_center"]
+scale = Vector2(10, 10)
+color = Color(0.756061, 0.46954, 0.204012, 1)
+polygon = PackedVector2Array(0, -5, 1, -1, 5, 0, 1, 1, 0, 5, -1, 1, -5, 0, -1, -1)
+
+[node name="marker_pos" type="Marker2D" parent="."]
+
+[node name="Polygon2D2" type="Polygon2D" parent="marker_pos"]
+scale = Vector2(10, 10)
+color = Color(0.112656, 0.622076, 0.624707, 1)
+polygon = PackedVector2Array(0, -5, 1, -1, 5, 0, 1, 1, 0, 5, -1, 1, -5, 0, -1, -1)
