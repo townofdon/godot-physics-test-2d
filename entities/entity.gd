@@ -59,32 +59,15 @@ func _calc_zmf(a: Entity, b: Entity) -> Vector2:
 
 func _collide_with_entity(other: Entity, collision: KinematicCollision2D) -> void:
 	# TODO: factor collision_magnitude into damage
-	var collision_magnitude := (self.velocity - other.velocity).length()
-	var dot_normal := velocity.normalized().dot(collision.get_normal())
+	#var collision_magnitude := (self.velocity - other.velocity).length()
 	var vector_to_other := other.global_position - self.global_position
 	var dot_pos := velocity.normalized().dot(vector_to_other.normalized())
 	var dot_travel := velocity.normalized().dot(collision.get_travel())
 	var is_other_behind:bool = dot_pos < 0 || dot_travel < 0
-	var is_glancing_collision:bool = false
 
 	# ignore the collider for one frame
 	last_collision_entity = other
 	add_collision_exception_with(last_collision_entity)
-
-	#if is_other_behind:
-		## push objects apart
-		#var zmf := _calc_zmf(self, other)
-		#var explosive_direction := vector_to_other * 0.5
-		#return
-
-	# problems:
-	# 1. glancing collisions are too abrubt
-	# - take dot of velocity vs. normal into account?
-	# - is this actually a problem?
-	# 2. overlapping colliders result in massive velocity buildup
-	# - push away objects behind
-	# - given a and b like `(a) (b)` moving right, if b collides with a, push it the opposite direction
-	# - this is a big problem
 	
 	# see: https://isaacphysics.org/concepts/cp_collisions
 	# 1. convert to zero-momentum-frame (zmf)
@@ -111,20 +94,6 @@ func _collide_with_entity(other: Entity, collision: KinematicCollision2D) -> voi
 	other.remove_forces_by_type(ForceOverTime.COLLISION)
 	self.forces.append(ForceOverTime.new(self.velocity, 1, ForceOverTime.COLLISION, other))
 	other.forces.append(ForceOverTime.new(other.velocity, 1, ForceOverTime.COLLISION, self))
-
-	#print('-----')
-	#print(name, ' collided ', other.name)
-	#print('num_forces=', forces.size())
-	#print('vector_to_other=', vector_to_other)
-	#print('v1_before=', ua, ',v1_after=', va)
-	#print('v2_before=', ub, ',v2_after', vb)
-	#print('travel=', collision.get_travel())
-	#print('normal=', collision.get_normal())
-	#print('dot_pos=', ua.normalized().dot(vector_to_other.normalized()))
-	#print('dot_vel=', ua.normalized().dot(ub.normalized()))
-	#print('dot_normal=', ua.normalized().dot(collision.get_normal()))
-	#print('dot_travel=', ua.normalized().dot(collision.get_travel().normalized()))
-	#print('frame=', frame_count)
 
 func remove_forces_by_type(type: int) -> void:
 	for i in range(forces.size()-1, -1, -1):

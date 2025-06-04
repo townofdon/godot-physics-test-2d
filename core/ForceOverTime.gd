@@ -2,6 +2,7 @@ extends RefCounted
 class_name ForceOverTime
 
 enum {
+	NULL,
 	COLLISION,
 	AFFECTOR,
 	TRACTOR_BEAM,
@@ -19,6 +20,7 @@ func _init(force: Vector2, duration: float, type: int, entity_collided_with = nu
 	_duration = duration
 	_timeLeft = duration
 	_entity_collided_with = entity_collided_with
+	_type = type
 
 func debug() -> void:
 	print("f=", _force, ",t=", _timeLeft)

@@ -50,6 +50,3 @@ func _process(delta: float) -> void:
 		camera.zoom.x = max(camera.zoom.x, 0.1)
 		camera.zoom.y = max(camera.zoom.y, 0.1)
 	camera.position = camera.position + camera_direction * camera_move_speed * delta / camera.zoom
-
-	var num_objects := get_child_count()
-	print(Engine.get_frames_per_second(), ",", get_child_count())
