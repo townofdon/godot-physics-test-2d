@@ -40,8 +40,9 @@ size = Vector2(54, 15)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_b0kkn")
-speed = 241.0
+speed = 377.33
 accel_curve = SubResource("Curve_e4p34")
+mass = 10.34
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1

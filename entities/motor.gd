@@ -16,6 +16,7 @@ class_name Motor
 #var direction := Vector2.ZERO
 
 var dynamics:SecondOrderDynamics
+var drag:SecondOrderDynamics
 var throttle := Vector2.ZERO # move input
 
 func _ready() -> void:
@@ -33,9 +34,20 @@ func _ready() -> void:
 	dynamics = SecondOrderDynamics.new(f, z, r, Vector2.ZERO)
 
 func _physics_process(delta: float) -> void:
-	var desired_velocity := throttle * entity.speed
-	entity.velocity = dynamics.compute(delta, desired_velocity)
+	if self.throttle.length() > 1:
+		self.throttle = self.throttle.normalized()
+	if throttle.is_zero_approx():
+		if drag == null:
+			drag = SecondOrderDynamics.new(0.6, 1, 0, entity.velocity)
+		entity.velocity = drag.compute(delta, Vector2.ZERO)
+		# compute dynamics to continue the system
+		dynamics.compute(delta, Vector2.ZERO)
+	else:
+		var desired_velocity := throttle * entity.speed
+		entity.velocity = dynamics.compute(delta, desired_velocity)
+		drag = null
 	throttle = Vector2.ZERO
+
 
 	#if time_since_move >= 0.5:
 		#throttle -= delta / entity.accel_time
@@ -53,7 +65,6 @@ func _physics_process(delta: float) -> void:
 # call every _physics_process
 func move(delta: float, throttle: Vector2) -> void:
 	self.throttle += throttle
-	self.throttle = self.throttle.clampf(-1, 1)
 
 	#time_since_move = 0
 	#throttle += delta / entity.accel_time
