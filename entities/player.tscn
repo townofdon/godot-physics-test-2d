@@ -1,0 +1,63 @@
+[gd_scene load_steps=11 format=3 uid="uid://cpkq048q6ujxd"]
+
+[ext_resource type="Script" uid="uid://di14avtn2pws4" path="res://entities/entity.gd" id="1_b0kkn"]
+[ext_resource type="Texture2D" uid="uid://cwaa6mbmwnawt" path="res://textures/ship.png" id="2_e4p34"]
+[ext_resource type="Script" uid="uid://bbimtw5ppakxx" path="res://entities/motor.gd" id="3_e4p34"]
+[ext_resource type="Script" uid="uid://b0iruepwfh645" path="res://entities/player_controller.gd" id="4_rfe5m"]
+
+[sub_resource type="Curve" id="Curve_e4p34"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rfe5m"]
+atlas = ExtResource("2_e4p34")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qly61"]
+atlas = ExtResource("2_e4p34")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qsoyl"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rfe5m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qly61")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_u3f3p"]
+radius = 24.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b0kkn"]
+size = Vector2(54, 15)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_b0kkn")
+accel_curve = SubResource("Curve_e4p34")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_qsoyl")
+autoplay = "default"
+frame_progress = 0.0624711
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_u3f3p")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(0, 13.5)
+shape = SubResource("RectangleShape2D_b0kkn")
+
+[node name="Motor" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("3_e4p34")
+
+[node name="PlayerController" type="Node" parent="."]
+script = ExtResource("4_rfe5m")

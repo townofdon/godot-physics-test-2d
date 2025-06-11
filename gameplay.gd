@@ -3,11 +3,15 @@ class_name Gameplay
 
 @export var camera_move_speed := 100
 @export var camera_zoom_speed := Vector2(1, 1)
+@export var spawn_rate := 0.2
+
 @onready var red = preload("res://entities/RedBall.tscn")
 @onready var blue = preload("res://entities/BlueBall.tscn")
 @onready var camera = $Camera2D
 @onready var marker_center = $marker_center
 @onready var marker_pos = $marker_pos
+
+var time_since_last_spawn := INF
 
 func _ready() -> void:
 	camera.position = get_viewport_rect().get_center()
@@ -21,17 +25,10 @@ func _process(delta: float) -> void:
 
 	var mouse_down := Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
 	var shift_pressed := Input.is_action_pressed("shift")
-	if mouse_down:
-		var node: Entity
-		if (shift_pressed):
-			node = blue.instantiate()
-		else:
-			node = red.instantiate()
-		self.add_child(node)
+	if mouse_down && time_since_last_spawn >= spawn_rate:
 		var direction:Vector2 = (center - pos).normalized()
-		node.global_position = pos
-		node.direction = direction
-		node.velocity = node.speed * node.direction
+		_spawn(shift_pressed, direction, pos)
+		time_since_last_spawn = 0
 
 	# move camera
 	var camera_direction := Vector2.ZERO
@@ -50,3 +47,15 @@ func _process(delta: float) -> void:
 		camera.zoom.x = max(camera.zoom.x, 0.1)
 		camera.zoom.y = max(camera.zoom.y, 0.1)
 	camera.position = camera.position + camera_direction * camera_move_speed * delta / camera.zoom
+	time_since_last_spawn += delta
+
+func _spawn(shift_pressed: bool, direction: Vector2, pos: Vector2) -> void:
+	var node: Entity
+	if (shift_pressed):
+		node = blue.instantiate()
+	else:
+		node = red.instantiate()
+	self.add_child(node)
+	node.global_position = pos
+	node.direction = direction
+	node.velocity = node.speed * node.direction

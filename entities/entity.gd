@@ -1,7 +1,18 @@
 extends CharacterBody2D
 class_name Entity
 
+@export_category("movement")
 @export var speed: float = 50
+@export var accel_time: float = 0.5
+@export var decel_time: float = 0.25
+@export var stop_time: float = 0.25
+@export var accel_curve: Curve
+
+@export_category("arrival")
+@export var arrive_distance: float = 50
+@export var arrive_curve: Curve
+
+@export_category("physics")
 @export var mass: float = 100
 @export var bounce: float = 0.9
 
@@ -10,25 +21,25 @@ class_name Entity
 var frame_count := 0
 var last_collision_entity: Entity
 
-var direction := Vector2.ZERO
 var forces: Array[ForceOverTime] = []
 
 func _ready() -> void:
+	if (!marker): return
 	var init_direction: Vector2 = (marker.global_position - global_position).normalized()
-	direction = init_direction
-	velocity = direction * speed
+	velocity = init_direction * speed
 
 func _physics_process(delta: float) -> void:
 	# handle external forces
 	var external_velocity := Vector2.ZERO
+	var computed_velocity := Vector2.ZERO
 	var t := 0.0
 	for force in forces:
 		if (force.is_completed()): continue
 		external_velocity += force.get_value()
 		t += force.get_t()
-	velocity = lerp(direction * speed, external_velocity, clamp(t, 0, 1))
+	computed_velocity = lerp(velocity, external_velocity, clamp(t, 0, 1))
 
-	var collision := move_and_collide(velocity * delta)
+	var collision := move_and_collide(computed_velocity * delta)
 
 	if (last_collision_entity && (!collision || collision.get_collider() != last_collision_entity)):
 		remove_collision_exception_with(last_collision_entity)
@@ -42,6 +53,8 @@ func _physics_process(delta: float) -> void:
 			# assume other collider is a static object
 			var rebound := velocity.bounce(collision.get_normal())
 			velocity = rebound * bounce
+			self.remove_forces_by_type(ForceOverTime.COLLISION)
+			self.forces.append(ForceOverTime.new(self.velocity, 1, ForceOverTime.COLLISION))
 
 	frame_count += 1
 	for force in forces:
