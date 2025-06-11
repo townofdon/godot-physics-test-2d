@@ -23,10 +23,6 @@ Utils="*res://core/utils.gd"
 
 window/stretch/mode="viewport"
 
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/secondorderdynamicsplugin/plugin.cfg")
-
 [input]
 
 shift={
