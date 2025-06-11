@@ -32,14 +32,14 @@ func _process(delta: float) -> void:
 
 	# move camera
 	var camera_direction := Vector2.ZERO
-	if Input.is_action_pressed("up"):
-		camera_direction += Vector2.UP
-	if Input.is_action_pressed("down"):
-		camera_direction += Vector2.DOWN
-	if Input.is_action_pressed("left"):
-		camera_direction += Vector2.LEFT
-	if Input.is_action_pressed("right"):
-		camera_direction += Vector2.RIGHT
+	#if Input.is_action_pressed("up"):
+		#camera_direction += Vector2.UP
+	#if Input.is_action_pressed("down"):
+		#camera_direction += Vector2.DOWN
+	#if Input.is_action_pressed("left"):
+		#camera_direction += Vector2.LEFT
+	#if Input.is_action_pressed("right"):
+		#camera_direction += Vector2.RIGHT
 	if Input.is_action_pressed("zoom_in"):
 		camera.zoom = camera.zoom + camera_zoom_speed * delta
 	elif Input.is_action_pressed("zoom_out"):
@@ -57,5 +57,4 @@ func _spawn(shift_pressed: bool, direction: Vector2, pos: Vector2) -> void:
 		node = red.instantiate()
 	self.add_child(node)
 	node.global_position = pos
-	node.direction = direction
-	node.velocity = node.speed * node.direction
+	node.velocity = node.speed * direction

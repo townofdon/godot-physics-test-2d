@@ -8,4 +8,11 @@ func _ready() -> void:
 	process_priority = -20
 
 func _physics_process(delta: float) -> void:
-	pass
+	if Input.is_action_pressed("up"):
+		motor.move(delta, Vector2.UP)
+	if Input.is_action_pressed("down"):
+		motor.move(delta, Vector2.DOWN)
+	if Input.is_action_pressed("left"):
+		motor.move(delta, Vector2.LEFT)
+	if Input.is_action_pressed("right"):
+		motor.move(delta, Vector2.RIGHT)

@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://cpkq048q6ujxd"]
+[gd_scene load_steps=12 format=3 uid="uid://cpkq048q6ujxd"]
 
 [ext_resource type="Script" uid="uid://di14avtn2pws4" path="res://entities/entity.gd" id="1_b0kkn"]
 [ext_resource type="Texture2D" uid="uid://cwaa6mbmwnawt" path="res://textures/ship.png" id="2_e4p34"]
 [ext_resource type="Script" uid="uid://bbimtw5ppakxx" path="res://entities/motor.gd" id="3_e4p34"]
+[ext_resource type="Resource" uid="uid://cw4go3h8xited" path="res://resources/kinematic_stats.tres" id="4_qly61"]
 [ext_resource type="Script" uid="uid://b0iruepwfh645" path="res://entities/player_controller.gd" id="4_rfe5m"]
 
 [sub_resource type="Curve" id="Curve_e4p34"]
@@ -39,6 +40,7 @@ size = Vector2(54, 15)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_b0kkn")
+speed = 241.0
 accel_curve = SubResource("Curve_e4p34")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -58,6 +60,7 @@ shape = SubResource("RectangleShape2D_b0kkn")
 [node name="Motor" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("3_e4p34")
+kinematic_stats = ExtResource("4_qly61")
 
 [node name="PlayerController" type="Node" parent="."]
 script = ExtResource("4_rfe5m")

@@ -4,7 +4,7 @@ extends EditorPlugin
 var plugin
 
 func _enter_tree():
-	plugin = preload("res://editor/plugins/SecondOrderDynamicsPlugin/SecondOrderDynamicsEditorInspectorPlugin.gd").new()
+	plugin = preload("res://addons/secondorderdynamicsplugin/editor_inspector_plugin.gd").new()
 	add_inspector_plugin(plugin)
 
 func _exit_tree():
