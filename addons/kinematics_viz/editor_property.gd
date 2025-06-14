@@ -5,8 +5,6 @@ var graph: VizGraph = preload("res://addons/kinematics_viz/viz_graph.gd").new()
 
 var stats: KinematicStats
 
-const EPSILON = 0.00001
-
 func _init() -> void:
 	read_only = true
 	add_child(graph)
@@ -42,9 +40,12 @@ func calc_curve_points() -> Dictionary:
 	var step:float = 1 / 60.0
 	var dynamics = SecondOrderDynamics.new(stats.f, stats.z, stats.r, 0.0)
 
+	points.append(Vector2(t, 0))
+	t += step
+
 	var x:float = 1.0
 	while t < t_end:
-		var y:float = dynamics.compute(t, x)
+		var y:float = dynamics.compute(t, stats.constants, x)
 		points.append(Vector2(t, y))
 		if y < min:
 			min = y

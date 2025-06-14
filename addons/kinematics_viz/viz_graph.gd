@@ -4,7 +4,6 @@ class_name VizGraph
 
 const PADDING := 50
 const CIRCLE_SIZE := 3
-const EPSILON = 0.00001
 
 var COLOR_BG = Color.html("#1D2229")
 var COLOR_DIM = Color.html("#253030")
@@ -45,7 +44,7 @@ func set_data(data: Dictionary) -> void:
 func _draw() -> void:
 	var rect := get_rect()
 	var resolution:String = "%1.1f"
-	if domain_max <= 0.5 + EPSILON:
+	if domain_max <= 0.5 + Constants.EPSILON:
 		resolution = "%1.2f"
 	plot_horizontal_line(value_min, "%1.1f" % value_min, Color.TRANSPARENT, Color.AQUAMARINE)
 	plot_horizontal_line(value_max, "%1.1f" % value_max, Color.TRANSPARENT, Color.AQUAMARINE)

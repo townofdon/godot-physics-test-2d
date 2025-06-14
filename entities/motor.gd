@@ -37,14 +37,16 @@ func _physics_process(delta: float) -> void:
 	if self.throttle.length() > 1:
 		self.throttle = self.throttle.normalized()
 	if throttle.is_zero_approx():
-		if drag == null:
-			drag = SecondOrderDynamics.new(0.6, 1, 0, entity.velocity)
-		entity.velocity = drag.compute(delta, Vector2.ZERO)
-		# compute dynamics to continue the system
-		dynamics.compute(delta, Vector2.ZERO)
+		pass
+		#if drag == null:
+			#drag = SecondOrderDynamics.new(0.6, 1, 0, entity.velocity)
+		#entity.velocity = drag.compute(delta, Vector2.ZERO)
+		## compute dynamics to continue the system
+		#dynamics.compute(delta, Vector2.ZERO)
+		entity.velocity = dynamics.compute(delta, kinematic_stats.constants, Vector2.ZERO)
 	else:
 		var desired_velocity := throttle * entity.speed
-		entity.velocity = dynamics.compute(delta, desired_velocity)
+		entity.velocity = dynamics.compute(delta, kinematic_stats.constants, desired_velocity)
 		drag = null
 	throttle = Vector2.ZERO
 
