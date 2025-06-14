@@ -41,15 +41,6 @@ func set_data(data: Dictionary) -> void:
 
 func _draw() -> void:
 	var rect := get_rect()
-	# draw dot grid
-	# 0 to 10
-	for i in 11:
-		for j in 11:
-			var tx := (i / 10.0)
-			var ty := (j / 10.0)
-			var x = tx * (rect.size.x - CIRCLE_SIZE * 1.5 - PADDING * 2) + PADDING
-			var y = ty * (rect.size.y - CIRCLE_SIZE * 2 - PADDING * 2) + PADDING
-			draw_circle(Vector2(x + CIRCLE_SIZE, y + CIRCLE_SIZE), CIRCLE_SIZE, c_dots, true, -1, true)
 	plot_horizontal_line(value_min, "%1.1f" % value_min, Color.TRANSPARENT)
 	plot_horizontal_line(value_max, "%1.1f" % value_max, Color.TRANSPARENT)
 	plot_horizontal_line(0.25, "", COLOR_DIM)
