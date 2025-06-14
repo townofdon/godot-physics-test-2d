@@ -23,6 +23,10 @@ Utils="*res://core/utils.gd"
 
 window/stretch/mode="viewport"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/kinematics_viz/plugin.cfg")
+
 [input]
 
 shift={

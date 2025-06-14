@@ -1,17 +1,13 @@
-[gd_resource type="Resource" script_class="KinematicStats" load_steps=3 format=3 uid="uid://cw4go3h8xited"]
+[gd_resource type="Resource" script_class="KinematicStats" load_steps=2 format=3 uid="uid://cw4go3h8xited"]
 
 [ext_resource type="Script" uid="uid://2x414g40wwmg" path="res://core/KinematicStats.gd" id="1_5egc1"]
 
-[sub_resource type="Curve" id="Curve_5egc1"]
-_limits = [-0.0867618, 1.00004, 0.0, 0.5]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.0166667, 0), 0.0, 0.0, 0, 0, Vector2(0.0333333, 0), 0.0, 0.0, 0, 0, Vector2(0.05, 0.0487177), 0.0, 0.0, 0, 0, Vector2(0.0666667, 0.432075), 0.0, 0.0, 0, 0, Vector2(0.0833333, 0.758665), 0.0, 0.0, 0, 0, Vector2(0.1, 0.925203), 0.0, 0.0, 0, 0, Vector2(0.116667, 0.985421), 0.0, 0.0, 0, 0, Vector2(0.133333, 0.998835), 0.0, 0.0, 0, 0, Vector2(0.15, 1), 0.0, 0.0, 0, 0, Vector2(0.166667, 1.00002), 0.0, 0.0, 0, 0, Vector2(0.183333, 0.999995), 0.0, 0.0, 0, 0, Vector2(0.2, 0.999998), 0.0, 0.0, 0, 0, Vector2(0.216667, 1), 0.0, 0.0, 0, 0, Vector2(0.233333, 1), 0.0, 0.0, 0, 0, Vector2(0.25, 1), 0.0, 0.0, 0, 0, Vector2(0.266667, 1), 0.0, 0.0, 0, 0, Vector2(0.283333, 1), 0.0, 0.0, 0, 0, Vector2(0.3, 1), 0.0, 0.0, 0, 0, Vector2(0.316667, 1), 0.0, 0.0, 0, 0, Vector2(0.333333, 1), 0.0, 0.0, 0, 0, Vector2(0.35, 1), 0.0, 0.0, 0, 0, Vector2(0.366667, 1), 0.0, 0.0, 0, 0, Vector2(0.383333, 1), 0.0, 0.0, 0, 0, Vector2(0.4, 1), 0.0, 0.0, 0, 0, Vector2(0.416667, 1), 0.0, 0.0, 0, 0, Vector2(0.433333, 1), 0.0, 0.0, 0, 0, Vector2(0.45, 1), 0.0, 0.0, 0, 0, Vector2(0.466667, 1), 0.0, 0.0, 0, 0, Vector2(0.483333, 1), 0.0, 0.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0]
-point_count = 31
-
 [resource]
 script = ExtResource("1_5egc1")
-f = 1.6606
-z = 0.756
-r = -0.56
-t_graph = 0.5
-curve = SubResource("Curve_5egc1")
+f = 0.0219
+z = 0.558
+r = -1.84
+domain = 5.0
+c_dots = Color(0.1463, 0.19, 0.188543, 1)
+viz = 0
 metadata/_custom_type_script = "uid://2x414g40wwmg"
