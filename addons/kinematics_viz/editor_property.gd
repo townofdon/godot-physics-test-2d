@@ -26,7 +26,6 @@ func _exit_tree() -> void:
 func update_graph() -> void:
 	if !graph: return
 	if !stats: return
-	graph.c_dots = stats.c_dots
 	var data := calc_curve_points()
 	graph.set_data(data)
 
@@ -35,6 +34,8 @@ func calc_curve_points() -> Dictionary:
 	var points:Array[Vector2] = []
 	var min := 0.0
 	var max := 1.0
+	var t_min := 0.0
+	var t_max := 0.0
 
 	var t:float = 0.0 # current t value of iteration
 	var t_end:float = clamp(stats.domain, 0.5, 100)
@@ -47,7 +48,9 @@ func calc_curve_points() -> Dictionary:
 		points.append(Vector2(t, y))
 		if y < min:
 			min = y
+			t_min = t
 		elif y > max:
 			max = y
+			t_max = t
 		t += step
-	return {"points": points, "min": min, "max": max, "t_end": t_end}
+	return {"points": points, "min": min, "max": max, "t_min": t_min, "t_max": t_max, "t_end": t_end}

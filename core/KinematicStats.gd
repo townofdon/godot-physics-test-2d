@@ -33,11 +33,4 @@ signal on_stats_changed
 		domain = value
 		on_stats_changed.emit()
 
-@export var c_dots: Color = Color(1, 0, 0, 1):
-	get:
-		return c_dots
-	set(value):
-		c_dots = value
-		on_stats_changed.emit()
-
 @export var viz = Viz.Show.Vizualizer
