@@ -20,24 +20,25 @@ var mouse_pos:Vector2 = Vector2.ZERO
 var is_mouse_in_graph:bool = false
 
 func _init() -> void:
+	if !Engine.is_editor_hint(): return
 	custom_minimum_size = Vector2(10, 400)
 	queue_redraw()
 
 func _process(delta: float) -> void:
+	if !Engine.is_editor_hint(): return
 	# check mouse position
-	if Engine.is_editor_hint():
-		var rect := get_rect()
-		var pos := get_local_mouse_position()
-		var prev_mouse_pos := mouse_pos
-		mouse_pos.x = inverse_lerp(PADDING, rect.size.x - PADDING, pos.x)
-		mouse_pos.y = 1 - inverse_lerp(PADDING, rect.size.y - PADDING, pos.y)
-		is_mouse_in_graph = true
-		if mouse_pos.x <= 0 || mouse_pos.y <= 0 || mouse_pos.x >= 1 || mouse_pos.y >= 1:
-			mouse_pos = Vector2.ZERO
-			is_mouse_in_graph = false
-		var did_change:bool = !prev_mouse_pos.is_equal_approx(mouse_pos)
-		if did_change:
-			queue_redraw()
+	var rect := get_rect()
+	var pos := get_local_mouse_position()
+	var prev_mouse_pos := mouse_pos
+	mouse_pos.x = inverse_lerp(PADDING, rect.size.x - PADDING, pos.x)
+	mouse_pos.y = 1 - inverse_lerp(PADDING, rect.size.y - PADDING, pos.y)
+	is_mouse_in_graph = true
+	if mouse_pos.x <= 0 || mouse_pos.y <= 0 || mouse_pos.x >= 1 || mouse_pos.y >= 1:
+		mouse_pos = Vector2.ZERO
+		is_mouse_in_graph = false
+	var did_change:bool = !prev_mouse_pos.is_equal_approx(mouse_pos)
+	if did_change:
+		queue_redraw()
 
 func set_data(data: Dictionary) -> void:
 	var points:Array[Vector2] = data["points"]
@@ -61,6 +62,7 @@ func set_data(data: Dictionary) -> void:
 	queue_redraw()
 
 func _draw() -> void:
+	if !Engine.is_editor_hint(): return
 	var rect := get_rect()
 	var resolution:String = "%1.1f"
 	if domain <= 0.5 + Constants.EPSILON:

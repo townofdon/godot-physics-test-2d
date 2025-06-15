@@ -10,6 +10,7 @@ signal on_stats_changed
 
 var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, DEFAULT_R)
 
+## frequency
 @export_range(0.0001, 10, 0.0001, "exp") var f:float = DEFAULT_F:
 	get:
 		return f
@@ -17,6 +18,8 @@ var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, 
 		f = value
 		_update_constants()
 		on_stats_changed.emit()
+
+## damping
 @export_range(0.001, 5, 0.001, "exp") var z:float = DEFAULT_Z:
 	get:
 		return z
@@ -24,6 +27,8 @@ var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, 
 		z = value
 		_update_constants()
 		on_stats_changed.emit()
+
+## system response
 @export_range(-10, 10, 0.01) var r:float = DEFAULT_R:
 	get:
 		return r
@@ -38,6 +43,8 @@ var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, 
 		use_pole_matching = value
 		_update_constants()
 		on_stats_changed.emit()
+
+@export_category("Visualization")
 @export_range(0.5, 20, 0.5, "exp") var domain:float = 2.0:
 	get:
 		return domain
