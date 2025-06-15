@@ -4,9 +4,9 @@
 
 [resource]
 script = ExtResource("1_5egc1")
-f = 1.4214
-z = 1.31
-r = 0.12
+f = 1.0102
+z = 0.827
+r = 0.0
 use_pole_matching = false
 domain = 0.5
 viz = 0
