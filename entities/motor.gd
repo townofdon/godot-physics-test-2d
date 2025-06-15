@@ -63,6 +63,7 @@ func _physics_process(delta: float) -> void:
 			# Basically, determine how much force to apply orthogonal to the input vector.
 			# d_velocity (drag velocity) can be manipulated to simulate better vehicle handling.
 			var delta_towards_old_v := entity.velocity - k_velocity
+			# FIXME: THERE'S A BUG WHERE FLYING IN A FIGURE-8 RESULTS IN SUDDEN STOPS.
 			d_velocity = utils.project(delta_towards_old_v, input.orthogonal())
 			d_velocity = lerp(d_velocity, Vector2.ZERO, stats.drag)
 			k_velocity = k_velocity * throttle

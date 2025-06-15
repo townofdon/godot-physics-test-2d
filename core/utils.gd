@@ -10,7 +10,7 @@ static func full_name(node: Node) -> String:
 	return out
 
 ## get the result of projecting a onto b (a'), then returning a' -> a
-static func orthagonal_projection(a:Vector2, b:Vector2) -> Vector2:
+static func ortho_project(a:Vector2, b:Vector2) -> Vector2:
 	if a.is_zero_approx() || b.is_zero_approx():
 		return Vector2.ZERO
 	var projection := a.project(b)
@@ -19,7 +19,7 @@ static func orthagonal_projection(a:Vector2, b:Vector2) -> Vector2:
 		return Vector2.ZERO
 	return normal
 
-## project a onto b. result is parallel to b
+## Project a onto b. Result is parallel to b.
 static func project(a:Vector2, b:Vector2) -> Vector2:
 	if a.is_zero_approx() || b.is_zero_approx():
 		return Vector2.ZERO
