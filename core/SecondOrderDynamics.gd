@@ -6,7 +6,7 @@ var xp # previous input
 var y  # output (position if Vector2)
 var yd # delta-output (velocity if Vector2)
 
-func _init(f:float, z:float, r:float, x0) -> void:
+func _init(x0) -> void:
 	assert(typeof(x0) == TYPE_FLOAT || typeof(x0) == TYPE_VECTOR2)
 	# initialize variables
 	xp = x0
@@ -16,11 +16,13 @@ func _init(f:float, z:float, r:float, x0) -> void:
 func compute(
 	delta:float,
 	kinematicConstants:KinematicConstants,
-	x,  # target value
+	## target value
+	x,
 ) -> Variant:
 	if (delta <= 0):
 		return y
 	assert(typeof(x) == typeof(xp))
+	assert(typeof(x) == typeof(y))
 	var T:float = delta
 	var k1 = kinematicConstants.k1
 	var k2 = kinematicConstants.k2
@@ -31,7 +33,7 @@ func compute(
 	# estimate change of input
 	var xd = (x - xp) / T
 	xp = x
-	## clamp k2 to guarantee stability without jitter
+	# clamp k2 to guarantee stability without jitter
 	var k1_stable:float = k1
 	var k2_stable:float = max(k2, T*T/2 + T*k1/2, T*k1)
 	# use pole matching when the system is very fast

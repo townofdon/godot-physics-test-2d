@@ -1,13 +1,14 @@
 [gd_resource type="Resource" script_class="KinematicStats" load_steps=2 format=3 uid="uid://cw4go3h8xited"]
 
-[ext_resource type="Script" uid="uid://2x414g40wwmg" path="res://core/KinematicStats.gd" id="1_5egc1"]
+[ext_resource type="Script" uid="uid://2x414g40wwmg" path="res://core/KinematicStats.gd" id="1_x2ya6"]
 
 [resource]
-script = ExtResource("1_5egc1")
+script = ExtResource("1_x2ya6")
 f = 1.1265
-z = 0.684
+z = 0.691
 r = 0.0
 use_pole_matching = false
-domain = 0.5
+drag = 0.015
+domain = 1.0
 viz = 0
 metadata/_custom_type_script = "uid://2x414g40wwmg"

@@ -44,6 +44,15 @@ var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, 
 		_update_constants()
 		on_stats_changed.emit()
 
+@export_category("Other Forces")
+## Set drag t-value. 0 => no drag, 1 => stops immediately
+@export_range(0.0, 1.0, 0.001) var drag: float = 0.1:
+	get:
+		return drag
+	set(value):
+		drag = value
+		on_stats_changed.emit()
+
 @export_category("Visualization")
 @export_range(0.5, 20, 0.5, "exp") var domain:float = 2.0:
 	get:

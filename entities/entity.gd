@@ -3,10 +3,8 @@ class_name Entity
 
 @export_category("movement")
 @export var speed: float = 50
-@export var accel_time: float = 0.5
-@export var decel_time: float = 0.25
-@export var stop_time: float = 0.25
-@export var accel_curve: Curve
+@export_range(0.0, 2.0, 0.001) var throttle_up_time: float = 0.3
+@export_range(0.0, 2.0, 0.001) var throttle_down_time: float = 0.15
 
 @export_category("arrival")
 @export var arrive_distance: float = 50
