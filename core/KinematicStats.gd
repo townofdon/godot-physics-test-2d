@@ -10,7 +10,7 @@ signal on_stats_changed
 
 var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, DEFAULT_R)
 
-@export_range(0.0001, 2, 0.0001, "exp") var f:float = DEFAULT_F:
+@export_range(0.0001, 10, 0.0001, "exp") var f:float = DEFAULT_F:
 	get:
 		return f
 	set(value):
@@ -38,7 +38,7 @@ var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, 
 		use_pole_matching = value
 		_update_constants()
 		on_stats_changed.emit()
-@export_range(0.5, 20, 0.5) var domain:float = 2.0:
+@export_range(0.5, 20, 0.5, "exp") var domain:float = 2.0:
 	get:
 		return domain
 	set(value):
