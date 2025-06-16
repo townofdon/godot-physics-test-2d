@@ -1,14 +1,10 @@
 extends CharacterBody2D
 class_name Entity
 
+# TODO: REMOVE
 @export_category("movement")
 @export var speed: float = 50
-@export_range(0.0, 2.0, 0.001) var throttle_up_time: float = 0.3
-@export_range(0.0, 2.0, 0.001) var throttle_down_time: float = 0.15
-
-@export_category("arrival")
-@export var arrive_distance: float = 50
-@export var arrive_curve: Curve
+@export var top_speed: float = 60
 
 @export_category("physics")
 @export var mass: float = 100
@@ -27,12 +23,7 @@ func _ready() -> void:
 	var init_direction: Vector2 = (marker.global_position - global_position).normalized()
 	velocity = init_direction * speed
 
-var wait := Constants.DEBUG_WAIT_FRAMES
 func _physics_process(delta: float) -> void:
-	if wait < Constants.DEBUG_WAIT_FRAMES:
-		wait += 1
-		return
-	wait = 0
 	# handle external forces
 	var external_velocity := Vector2.ZERO
 	var computed_velocity := Vector2.ZERO

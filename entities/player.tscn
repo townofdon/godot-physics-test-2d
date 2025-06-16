@@ -35,9 +35,10 @@ radius = 24.0
 size = Vector2(54, 15)
 
 [node name="Player" type="CharacterBody2D"]
+motion_mode = 1
 script = ExtResource("1_b0kkn")
 speed = 400.0
-throttle_up_time = 0.15
+top_speed = 600.0
 mass = 10.34
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

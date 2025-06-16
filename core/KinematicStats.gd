@@ -10,6 +10,13 @@ signal on_stats_changed
 
 var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, DEFAULT_R)
 
+@export_category("movement")
+@export var speed: float = 400
+@export var top_speed: float = 600
+## Determines how fast the vehicle reaches top speed
+@export_range(0.0, 1.0, 0.0001) var top_speed_growth: float = 0.0175
+
+@export_category("kinematics")
 ## frequency
 @export_range(0.0001, 10, 0.0001, "exp") var f:float = DEFAULT_F:
 	get:
@@ -65,17 +72,19 @@ var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, 
 
 @export_category("handling")
 ## 0 => slowest throttle up, 1 => infinitely fast throttle up
-@export_range(0.1, 1.0, 0.001) var throttle_up_speed: float = 0.2:
+@export_range(0.001, 1.0, 0.001) var throttle_up_speed: float = 0.2:
 	get:
 		return throttle_up_speed
 	set(value):
 		throttle_up_speed = value
 		on_stats_changed.emit()
-# TODO: REMOVE THIS
-@export_range(0.0, 2.0, 0.001) var throttle_up_time: float = 0.15
 @export_range(0.0, 2.0, 0.001) var throttle_down_time: float = 0.3
 ## Vehicle handling — determines responsiveness of changing directions
 @export_range(0.0, 1.0, 0.001) var handling: float = 0.5
+
+@export_category("arrival")
+@export var arrive_distance: float = 50
+@export var arrive_curve: Curve
 
 func _init() -> void:
 	_update_constants()

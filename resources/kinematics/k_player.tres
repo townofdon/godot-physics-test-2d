@@ -4,14 +4,18 @@
 
 [resource]
 script = ExtResource("1_x2ya6")
+speed = 400.0
+top_speed = 600.0
+top_speed_growth = 0.0175
 f = 1.1265
 z = 0.691
 r = 0.0
 use_pole_matching = false
-domain = 1.0
+domain = 3.5
 viz = 0
 drag = 0.015
-handling = 0.5
-throttle_up_time = 0.15
+throttle_up_speed = 0.12
 throttle_down_time = 0.3
+handling = 0.5
+arrive_distance = 50.0
 metadata/_custom_type_script = "uid://2x414g40wwmg"
