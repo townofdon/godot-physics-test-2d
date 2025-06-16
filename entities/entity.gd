@@ -15,6 +15,7 @@ class_name Entity
 @export var bounce: float = 0.9
 
 @onready var marker = %Marker2D
+@onready var motor = %Motor
 
 var frame_count := 0
 var last_collision_entity: Entity
@@ -26,7 +27,12 @@ func _ready() -> void:
 	var init_direction: Vector2 = (marker.global_position - global_position).normalized()
 	velocity = init_direction * speed
 
+var wait := Constants.DEBUG_WAIT_FRAMES
 func _physics_process(delta: float) -> void:
+	if wait < Constants.DEBUG_WAIT_FRAMES:
+		wait += 1
+		return
+	wait = 0
 	# handle external forces
 	var external_velocity := Vector2.ZERO
 	var computed_velocity := Vector2.ZERO
@@ -44,6 +50,7 @@ func _physics_process(delta: float) -> void:
 		last_collision_entity = null
 
 	if (collision):
+		if motor: motor.reset_forces()
 		var otherCollider := collision.get_collider()
 		if (otherCollider is Entity):
 			_collide_with_entity(collision.get_collider(), collision)
