@@ -16,6 +16,6 @@ viz = 0
 drag = 0.015
 throttle_up_speed = 0.12
 throttle_down_time = 0.3
-handling = 0.5
+handling = 0.43
 arrive_distance = 50.0
 metadata/_custom_type_script = "uid://2x414g40wwmg"

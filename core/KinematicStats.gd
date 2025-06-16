@@ -11,7 +11,9 @@ signal on_stats_changed
 var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, DEFAULT_R)
 
 @export_category("movement")
+## base speed
 @export var speed: float = 400
+## max speed the vehicle can reach
 @export var top_speed: float = 600
 ## Determines how fast the vehicle reaches top speed
 @export_range(0.0, 1.0, 0.0001) var top_speed_growth: float = 0.0175

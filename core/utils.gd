@@ -28,15 +28,16 @@ static func project(a:Vector2, b:Vector2) -> Vector2:
 		return Vector2.ZERO
 	return projection
 
-## Get the normalized dot product between two vectors, mapped to [0-1].
-## 0 => vectors are pointing in opposite directions.
-## 1 => vectors are pointing in exactly the same direction.
+## Get the normalized dot product between two vectors, mapped to [-1,1].
+## -1 => vectors are pointing in opposite directions.
+## 0  => vectors are orthogonal.
+## 1  => vectors are pointing in exactly the same direction.
 static func dotnorm(a:Vector2, b:Vector2) -> float:
 	if a.is_zero_approx() || b.is_zero_approx():
 		return 0.0
 	return a.normalized().dot(b.normalized())
 
-## Get the normalized dot product between two vectors, mapped to [0-1].
+## Get the normalized dot product between two vectors, mapped to [0,1].
 ## 0 => vectors are pointing in opposite directions.
 ## 1 => vectors are pointing in exactly the same direction.
 static func dot01(a:Vector2, b:Vector2) -> float:
