@@ -66,7 +66,7 @@ func _physics_process(delta: float) -> void:
 		top_speed_factor = 0
 
 	# calc new velocity
-	var desired_speed:float = lerp(stats.speed, stats.top_speed, top_speed_factor)
+	var desired_speed:float = lerp(stats.speed, max(stats.speed, stats.top_speed), top_speed_factor)
 	var desired_velocity := throttle * desired_speed * input
 	var momentum = lerp(entity.velocity, Vector2.ZERO, stats.drag)
 	var momentum_alignment:float = utils.dotnorm(momentum, desired_velocity)
@@ -74,7 +74,7 @@ func _physics_process(delta: float) -> void:
 	momentum_alignment = clamp(momentum_alignment, 0.1, 0.85)
 	var sluggishness:Vector2 = lerp(momentum, desired_velocity, momentum_alignment)
 	desired_velocity = lerp(sluggishness, desired_velocity, stats.handling)
-	var v_calc = dynamics.compute(delta, stats.constants, desired_velocity)
+	var v_calc = dynamics.compute(delta, stats.constants, entity.velocity, desired_velocity)
 	if mode == Mode.Manual:
 		entity.velocity = lerp(momentum, v_calc, clamp(input.length() * throttle, 0, 1))
 	elif mode == Mode.Arrive:

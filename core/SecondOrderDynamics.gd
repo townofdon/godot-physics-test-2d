@@ -3,26 +3,27 @@ class_name SecondOrderDynamics
 
 # state
 var xp # previous input
-var y  # output (position if Vector2)
 var yd # delta-output (velocity if Vector2)
 
 func _init(x0) -> void:
 	assert(typeof(x0) == TYPE_FLOAT || typeof(x0) == TYPE_VECTOR2)
 	# initialize variables
 	xp = x0
-	y = x0
 	yd = x0
 
+# TODO: supply current velocity as a parameter
 func compute(
 	delta:float,
 	kinematicConstants:KinematicConstants,
+	## current value
+	y,
 	## target value
 	x,
 ) -> Variant:
 	if (delta <= 0):
 		return y
-	assert(typeof(x) == typeof(xp))
 	assert(typeof(x) == typeof(y))
+	assert(typeof(x) == typeof(xp))
 	var T:float = delta
 	var k1 = kinematicConstants.k1
 	var k2 = kinematicConstants.k2
@@ -44,6 +45,7 @@ func compute(
 		var t2:float = T / (1 + beta - alpha)
 		k1_stable = (1 - beta) * t2
 		k2_stable = T * t2
+	# TODO: change to fully-implicit euler method
 	y = y + T * yd
 	yd = yd + T * (x + k3*xd - y - k1_stable*yd) / k2_stable
 	return y

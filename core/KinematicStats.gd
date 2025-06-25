@@ -83,6 +83,8 @@ var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, 
 @export_range(0.0, 2.0, 0.001) var throttle_down_time: float = 0.3
 ## Vehicle handling — determines responsiveness of changing directions
 @export_range(0.0, 1.0, 0.001) var handling: float = 0.5
+## How fast the vehicle comes to a stop when opposite thrust is applied
+@export_range(0.0, 1.0, 0.001) var brake_power: float = 0.0
 
 @export_category("arrival")
 @export var arrive_distance: float = 50
