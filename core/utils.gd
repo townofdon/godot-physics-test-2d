@@ -44,3 +44,7 @@ static func dot01(a:Vector2, b:Vector2) -> float:
 	if a.is_zero_approx() || b.is_zero_approx():
 		return 0.0
 	return (a.normalized().dot(b.normalized()) + 1) * 0.5
+
+## Lerp with framerate independence using exponential decay
+static func lerpd(a: Variant, b: Variant, t: float, delta: float) -> Variant:
+	return lerp(a, b, 1 - exp(-t * delta))

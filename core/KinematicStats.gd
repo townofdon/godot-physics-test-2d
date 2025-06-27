@@ -16,9 +16,9 @@ var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, 
 ## max speed the vehicle can reach
 @export var top_speed: float = 600
 ## Determines how fast the vehicle reaches top speed
-@export_range(0.0, 1.0, 0.0001) var top_speed_growth: float = 0.0175
+@export_range(0.0, 80.0, 0.0001, "exp") var top_speed_growth: float = 1.06
 
-@export_category("kinematics")
+@export_category("acceleration")
 ## frequency
 @export_range(0.0001, 10, 0.0001, "exp") var f:float = DEFAULT_F:
 	get:
@@ -64,8 +64,8 @@ var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, 
 @export var viz = Viz.Show.Vizualizer
 
 @export_category("Drag")
-## Set drag t-value. 0 => no drag, 1 => stops immediately
-@export_range(0.0, 1.0, 0.001) var drag: float = 0.1:
+## Set drag t-value. 0 => no drag, 80 => stops immediately
+@export_range(0.0, 80.0, 0.001, "exp") var drag: float = 0.1:
 	get:
 		return drag
 	set(value):
@@ -73,8 +73,8 @@ var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, 
 		on_stats_changed.emit()
 
 @export_category("handling")
-## 0 => slowest throttle up, 1 => infinitely fast throttle up
-@export_range(0.001, 1.0, 0.001) var throttle_up_speed: float = 0.2:
+## 0 => slowest throttle up, 1 => fastest throttle up
+@export_range(0.001, 80.0, 0.001, "exp") var throttle_up_speed: float = 0.2:
 	get:
 		return throttle_up_speed
 	set(value):

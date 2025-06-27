@@ -97,7 +97,7 @@ func calc_drag_curve_data() -> Dictionary:
 	t += step
 	# iterate remaining points
 	while t < t_end:
-		y = lerp(y, 0.0, stats.drag)
+		y = utils.lerpd(y, 0.0, stats.drag, step)
 		points.append(Vector2(t, y))
 		if y < min:
 			min = y
@@ -123,7 +123,7 @@ func calc_throttle_up_curve_data() -> Dictionary:
 	t += step
 	# iterate remaining points
 	while t < t_end:
-		y = lerp(y, 1.0, stats.throttle_up_speed)
+		y = utils.lerpd(y, 1.0, stats.throttle_up_speed, step)
 		points.append(Vector2(t, y))
 		if y < min:
 			min = y
