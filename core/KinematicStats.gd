@@ -8,7 +8,8 @@ const DEFAULT_R:float = 0
 
 signal on_stats_changed
 
-var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, DEFAULT_R)
+var accel_constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, DEFAULT_R)
+var rotation_constants:KinematicConstants = KinematicConstants.new(4.0, 1.0, 0.0)
 
 @export_category("movement")
 ## base speed
@@ -18,11 +19,20 @@ var constants:KinematicConstants = KinematicConstants.new(DEFAULT_F, DEFAULT_Z, 
 ## Determines how fast the vehicle reaches top speed
 @export_range(0.0, 80.0, 0.0001, "exp") var top_speed_growth: float = 1.06
 
+@export_category("rotation")
+@export var enforce_cardinality := false
+## base rotation speed (degrees / sec)
+@export_range(0, 1440.0, 0.01) var rotation_speed: float = 360
+## rotation acceleration (freq of spring response)
+@export_range(0.001, 80.0, 0.0001, "exp") var rotation_accel: float = 4.0:
+	set(value):
+		rotation_accel = value
+		_update_constants()
+		on_stats_changed.emit()
+
 @export_category("acceleration")
 ## frequency
 @export_range(0.0001, 10, 0.0001, "exp") var f:float = DEFAULT_F:
-	get:
-		return f
 	set(value):
 		f = value
 		_update_constants()
@@ -94,4 +104,5 @@ func _init() -> void:
 	_update_constants()
 
 func _update_constants() -> void:
-	constants = KinematicConstants.new(f, z, r, use_pole_matching)
+	accel_constants = KinematicConstants.new(f, z, r, use_pole_matching)
+	rotation_constants = KinematicConstants.new(rotation_accel, 1.0, 0, false)

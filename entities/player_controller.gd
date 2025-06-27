@@ -17,4 +17,8 @@ func _physics_process(delta: float) -> void:
 		input += Vector2.LEFT
 	if Input.is_action_pressed("right"):
 		input += Vector2.RIGHT
-	motor.move(delta, input)
+	motor.move(input)
+	if Input.is_action_pressed("spin_right"):
+		motor.spin(1)
+	elif Input.is_action_pressed("spin_left"):
+		motor.spin(-1)

@@ -71,7 +71,7 @@ func calc_kinematic_curve_data() -> Dictionary:
 	var y:float = 0.0
 	var x:float = 1.0
 	while t < t_end:
-		y = dynamics.compute(t, stats.constants, y, x)
+		y = dynamics.compute(t, stats.accel_constants, x, y)
 		points.append(Vector2(t, y))
 		if y < min:
 			min = y

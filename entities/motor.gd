@@ -7,19 +7,27 @@ class_name Motor
 
 enum Mode { Manual, Arrive }
 
+const ROTATION_CARDINALITY := 45;
+
 var mode := Mode.Manual
 var input := Vector2.ZERO # move input
 var destination := Vector2.ZERO # arrival destination
 var throttle := 0.0
 var top_speed_factor := 0.0
-var dynamics:SecondOrderDynamics
+var accel:SecondOrderDynamics
+
+var spin_velocity := 0.0 # rotation speed
+var spin_input := 0.0 # rotation input [-1, 1]
+var spin_target := INF # rotation target (degrees) - INF => no target
+var spin_accel:SecondOrderDynamics
 
 ## Call this when the entity collides with something.
 func reset_forces() -> void:
-	dynamics = SecondOrderDynamics.new(entity.velocity)
+	accel = SecondOrderDynamics.new(entity.velocity)
+	spin_accel = SecondOrderDynamics.new(spin_velocity)
 
 # call every _physics_process
-func move(delta: float, input: Vector2) -> void:
+func move(input: Vector2) -> void:
 	self.input += input
 	if self.input.length() > 1:
 		self.input = self.input.normalized()
@@ -30,13 +38,23 @@ func move_to(point: Vector2) -> void:
 	destination = point
 	mode = Mode.Arrive
 
+# call every _physics_process
+func spin(direction: float) -> void:
+	spin_input = clamp(direction, -1.0, 1.0)
+	spin_target = INF
+
+# call once
+func spin_to(desired_angle: float) -> void:
+	spin_target = desired_angle
+
 func _ready() -> void:
 	process_priority = -10
 	assert(!!stats, "motor must have Entity as a parent: " + utils.full_name(self))
 	assert(!!stats, "KinematicStats unassigned in " + utils.full_name(self))
 	assert(stats is KinematicStats)
 	assert(entity is Entity)
-	dynamics = SecondOrderDynamics.new(entity.velocity)
+	accel = SecondOrderDynamics.new(entity.velocity)
+	spin_accel = SecondOrderDynamics.new(spin_velocity)
 
 func _physics_process(delta: float) -> void:
 	if !entity: return
@@ -74,7 +92,7 @@ func _physics_process(delta: float) -> void:
 	momentum_alignment = clamp(momentum_alignment, 0.1, 0.85)
 	var sluggishness:Vector2 = lerp(momentum, desired_velocity, momentum_alignment)
 	desired_velocity = lerp(sluggishness, desired_velocity, stats.handling)
-	var v_calc = dynamics.compute(delta, stats.constants, entity.velocity, desired_velocity)
+	var v_calc = accel.compute(delta, stats.accel_constants, desired_velocity, entity.velocity)
 	if mode == Mode.Manual:
 		entity.velocity = lerp(momentum, v_calc, clamp(input.length() * throttle, 0, 1))
 	elif mode == Mode.Arrive:
@@ -82,5 +100,20 @@ func _physics_process(delta: float) -> void:
 		var has_arrived := arrival <= Constants.EPSILON
 		if has_arrived: mode = Mode.Manual
 
+	# calc rotation
+	if spin_target != INF:
+		var desired_angle := spin_target
+		var current_angle := rotation_degrees
+		var angle_error := calc_angle_difference(desired_angle, current_angle)
+		spin_input = sign(angle_error) * inverse_lerp(0, stats.rotation_speed, abs(angle_error))
+		if is_zero_approx(angle_error): spin_target = INF
+	spin_velocity = spin_accel.compute(delta, stats.rotation_constants, spin_input * stats.rotation_speed, spin_velocity)
+	entity.rotate(deg_to_rad(spin_velocity * delta))
+
 	# set state for next frame
 	input = Vector2.ZERO
+	spin_input = 0.0
+
+#calculate modular difference, and remap to [-180, 180]
+func calc_angle_difference(a: float, b: float) -> float:
+	return fmod(a - b + 540.0, 360.0) - 180.0
