@@ -5,9 +5,11 @@ var Graph = preload("res://addons/kinematics_viz/viz_graph.gd")
 var graph_kine: VizGraph = Graph.new()
 var graph_drag: VizGraph = Graph.new()
 var graph_throttle: VizGraph = Graph.new()
+var graph_motor: VizGraph = Graph.new()
 var label_kine: Label = Label.new()
 var label_drag: Label = Label.new()
 var label_throttle: Label = Label.new()
+var label_motor: Label = Label.new()
 var container:Container = VBoxContainer.new()
 
 var stats: KinematicStats
@@ -21,6 +23,7 @@ func _init() -> void:
 	setup_label(label_kine, "Kinematic Curve")
 	setup_label(label_drag, "Drag Response")
 	setup_label(label_throttle, "Throttle Up Response")
+	setup_label(label_motor, "Motor Response")
 	add_child(container)
 	container.add_child(label_kine)
 	container.add_child(graph_kine)
@@ -28,6 +31,8 @@ func _init() -> void:
 	container.add_child(graph_drag)
 	container.add_child(label_throttle)
 	container.add_child(graph_throttle)
+	container.add_child(label_motor)
+	container.add_child(graph_motor)
 	set_bottom_editor(container)
 
 func setup_label(label: Label, text: String) -> void:
@@ -52,6 +57,7 @@ func update_graph() -> void:
 	graph_kine.set_data(calc_kinematic_curve_data())
 	graph_drag.set_data(calc_drag_curve_data())
 	graph_throttle.set_data(calc_throttle_up_curve_data())
+	graph_motor.set_data(calc_motor_kinematics_curve())
 
 func calc_kinematic_curve_data() -> Dictionary:
 	if !stats.domain: stats.domain = 2.0
@@ -125,6 +131,33 @@ func calc_throttle_up_curve_data() -> Dictionary:
 	while t < t_end:
 		y = utils.lerpd(y, 1.0, stats.throttle_up_speed, step)
 		points.append(Vector2(t, y))
+		if y < min:
+			min = y
+			t_min = t
+		elif y > max:
+			max = y
+			t_max = t
+		t += step
+	return {"points": points, "min": min, "max": max, "t_min": t_min, "t_max": t_max, "t_end": t_end}
+
+func calc_motor_kinematics_curve() -> Dictionary:
+	var motor := Motor.new()
+	motor.stats = stats
+	motor._ready()
+	var points:Array[Vector2] = []
+	var min := 0.0
+	var max := 1.0
+	var t_min := 0.0
+	var t_max := 0.0
+	var t_end:float = clamp(stats.domain, 0.5, 100)
+	var t:float = 0.0 # current t value of iteration
+	var step:float = 1 / 60.0
+	# iterate remaining points
+	while t < t_end:
+		var y:float = motor.velocity.x
+		points.append(Vector2(t, y))
+		motor.move(Vector2.RIGHT)
+		motor._physics_process(step)
 		if y < min:
 			min = y
 			t_min = t
