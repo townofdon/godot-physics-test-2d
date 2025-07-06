@@ -89,7 +89,7 @@ func _physics_process(delta: float) -> void:
 		top_speed_factor = 0
 
 	# calc new velocity
-	var desired_speed:float = utils.lerpf(stats.speed, max(stats.speed, stats.top_speed), top_speed_factor)
+	var desired_speed:float = lerpf(stats.speed, max(stats.speed, stats.top_speed), top_speed_factor)
 	var desired_velocity := throttle * desired_speed * input
 	var momentum = utils.lerpdv2(velocity, Vector2.ZERO, stats.drag, delta)
 	var momentum_alignment:float = utils.dotnorm(momentum, desired_velocity)
@@ -106,16 +106,20 @@ func _physics_process(delta: float) -> void:
 		if has_arrived: mode = Mode.Manual
 
 	# calc rotation
+	if is_zero_approx(spin_input) && stats.enforce_cardinality:
+		spin_target = get_cardinal_angle(entity.rotation_degrees)
 	if spin_target != INF:
 		var desired_angle := spin_target
-		var current_angle := rotation_degrees
+		var current_angle := entity.rotation_degrees
 		var angle_error := calc_angle_difference(desired_angle, current_angle)
-		spin_input = sign(angle_error) * inverse_lerp(0, stats.rotation_speed, abs(angle_error))
+		spin_input = inverse_lerp(0, stats.rotation_speed, abs(angle_error))
+		spin_input = clamp(spin_input, 0.0, 1.0)
+		spin_input = Easing.Cubic.EaseOut(spin_input, 0, 1, 1)
+		spin_input = sign(angle_error) * spin_input
 		if is_zero_approx(angle_error): spin_target = INF
 	var mag_velocity = clamp(velocity.length() / stats.top_speed, 0, 1)
-	var target_spin_speed: float = spin_input * stats.rotation_speed * utils.lerpf(stats.rotation_limit_at_speed, 1.0, 1.0 - mag_velocity)
+	var target_spin_speed: float = spin_input * stats.rotation_speed * lerpf(stats.rotation_limit_at_speed, 1.0, 1.0 - mag_velocity)
 	spin_velocity = spin_accel.compute(delta, stats.rotation_constants, target_spin_speed, spin_velocity)
-
 
 	# update entity
 	if entity:
@@ -126,6 +130,12 @@ func _physics_process(delta: float) -> void:
 	input = Vector2.ZERO
 	spin_input = 0.0
 
-#calculate modular difference, and remap to [-180, 180]
+## calculate modular difference, and remap to [-180, 180]
 func calc_angle_difference(a: float, b: float) -> float:
 	return fmod(a - b + 540.0, 360.0) - 180.0
+
+## get angle with cardinality applied
+func get_cardinal_angle(angle: float) -> float:
+	if !stats.enforce_cardinality:
+		return angle
+	return roundf(angle / ROTATION_CARDINALITY) * ROTATION_CARDINALITY
