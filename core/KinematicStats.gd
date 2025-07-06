@@ -29,6 +29,7 @@ var rotation_constants:KinematicConstants = KinematicConstants.new(4.0, 1.0, 0.0
 		rotation_accel = value
 		_update_constants()
 		on_stats_changed.emit()
+@export_range(0, 1, 0.001) var rotation_limit_at_speed: float = 0.3
 
 @export_category("acceleration")
 ## frequency

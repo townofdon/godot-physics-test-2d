@@ -89,17 +89,17 @@ func _physics_process(delta: float) -> void:
 		top_speed_factor = 0
 
 	# calc new velocity
-	var desired_speed:float = lerp(stats.speed, max(stats.speed, stats.top_speed), top_speed_factor)
+	var desired_speed:float = utils.lerpf(stats.speed, max(stats.speed, stats.top_speed), top_speed_factor)
 	var desired_velocity := throttle * desired_speed * input
-	var momentum = utils.lerpd(velocity, Vector2.ZERO, stats.drag, delta)
+	var momentum = utils.lerpdv2(velocity, Vector2.ZERO, stats.drag, delta)
 	var momentum_alignment:float = utils.dotnorm(momentum, desired_velocity)
 	if momentum_alignment < 0: momentum_alignment = momentum_alignment * -0.25
 	momentum_alignment = clamp(momentum_alignment, 0.1, 0.85)
-	var sluggishness:Vector2 = lerp(momentum, desired_velocity, momentum_alignment)
-	desired_velocity = lerp(sluggishness, desired_velocity, stats.handling)
+	var sluggishness:Vector2 = momentum.lerp(desired_velocity, momentum_alignment)
+	desired_velocity = sluggishness.lerp(desired_velocity, stats.handling)
 	var v_calc = accel.compute(delta, stats.accel_constants, desired_velocity, velocity)
 	if mode == Mode.Manual:
-		velocity = lerp(momentum, v_calc, clamp(input.length() * throttle, 0, 1))
+		velocity = momentum.lerp(v_calc, clamp(input.length() * throttle, 0, 1))
 	elif mode == Mode.Arrive:
 		velocity = v_calc * arrival
 		var has_arrived := arrival <= Constants.EPSILON
@@ -112,7 +112,10 @@ func _physics_process(delta: float) -> void:
 		var angle_error := calc_angle_difference(desired_angle, current_angle)
 		spin_input = sign(angle_error) * inverse_lerp(0, stats.rotation_speed, abs(angle_error))
 		if is_zero_approx(angle_error): spin_target = INF
-	spin_velocity = spin_accel.compute(delta, stats.rotation_constants, spin_input * stats.rotation_speed, spin_velocity)
+	var mag_velocity = clamp(velocity.length() / stats.top_speed, 0, 1)
+	var target_spin_speed: float = spin_input * stats.rotation_speed * utils.lerpf(stats.rotation_limit_at_speed, 1.0, 1.0 - mag_velocity)
+	spin_velocity = spin_accel.compute(delta, stats.rotation_constants, target_spin_speed, spin_velocity)
+
 
 	# update entity
 	if entity:

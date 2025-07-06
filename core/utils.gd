@@ -45,6 +45,14 @@ static func dot01(a:Vector2, b:Vector2) -> float:
 		return 0.0
 	return (a.normalized().dot(b.normalized()) + 1) * 0.5
 
-## Lerp with framerate independence using exponential decay
-static func lerpd(a: Variant, b: Variant, t: float, delta: float) -> Variant:
+## lerp a float (type-safe!). Use Vector2.lerp for lerping a vec
+static func lerpf(a: float, b: float, t: float) -> float:
+	return lerp(a, b, t)
+
+## Lerp float with framerate independence using exponential decay
+static func lerpd(a: float, b: float, t: float, delta: float) -> float:
+	return lerp(a, b, 1 - exp(-t * delta))
+
+## Lerp Vec2 with framerate independence using exponential decay
+static func lerpdv2(a: Vector2, b: Vector2, t: float, delta: float) -> Vector2:
 	return lerp(a, b, 1 - exp(-t * delta))
