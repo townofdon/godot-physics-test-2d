@@ -1,13 +1,11 @@
 extends Node
 class_name PlayerController
 
-@onready var motor:Motor = %Motor
+func on_physics_process(motor:Motor, delta: float) -> void:
+	assert(motor, "motor required in node: " + utils.full_name(self))
 
-func _ready() -> void:
-	assert(motor is Motor)
-	process_priority = -20
-
-func _physics_process(delta: float) -> void:
+	# TODO: ADD GAMEPAD SUPPORT
+	# TODO: ADD MULTIPLAYER SUPPORT
 	var input := Vector2.ZERO
 	if Input.is_action_pressed("up"):
 		input += Vector2.UP

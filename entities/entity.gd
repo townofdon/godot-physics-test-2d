@@ -12,6 +12,7 @@ class_name Entity
 
 @onready var marker = %Marker2D
 @onready var motor = %Motor
+@onready var playerController = %PlayerController
 
 var frame_count := 0
 var last_collision_entity: Entity
@@ -19,11 +20,20 @@ var last_collision_entity: Entity
 var forces: Array[ForceOverTime] = []
 
 func _ready() -> void:
+	if motor: motor.on_ready(self)
+
+	# TODO: REMOVE INITIAL VELOCITY TOWARDS MARKER
 	if (!marker): return
 	var init_direction: Vector2 = (marker.global_position - global_position).normalized()
 	velocity = init_direction * speed
 
 func _physics_process(delta: float) -> void:
+	# handle player input
+	if playerController: playerController.on_physics_process(motor, delta)
+
+	# handle motor
+	if motor: motor.on_physics_process(self, delta)
+
 	# handle external forces
 	var external_velocity := Vector2.ZERO
 	var computed_velocity := Vector2.ZERO
@@ -41,7 +51,6 @@ func _physics_process(delta: float) -> void:
 		last_collision_entity = null
 
 	if (collision):
-		if motor: motor.reset_forces()
 		var otherCollider := collision.get_collider()
 		if (otherCollider is Entity):
 			_collide_with_entity(collision.get_collider(), collision)
@@ -51,6 +60,7 @@ func _physics_process(delta: float) -> void:
 			velocity = rebound * bounce
 			self.remove_forces_by_type(ForceOverTime.COLLISION)
 			self.forces.append(ForceOverTime.new(self.velocity, 1, ForceOverTime.COLLISION))
+		if motor: motor.reset_forces(self.velocity)
 
 	frame_count += 1
 	for force in forces:

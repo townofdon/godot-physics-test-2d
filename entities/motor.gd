@@ -3,14 +3,12 @@ class_name Motor
 
 @export var stats:KinematicStats
 
-@onready var entity:Entity = get_parent()
-
 enum Mode { Manual, Arrive }
 
 const ROTATION_CARDINALITY := 45;
 
 var mode := Mode.Manual
-var input := Vector2.ZERO # move input
+var move_input := Vector2.ZERO # move input
 var destination := Vector2.ZERO # arrival destination
 var velocity := Vector2.ZERO
 var throttle := 0.0
@@ -23,16 +21,16 @@ var spin_target := INF # rotation target (degrees) - INF => no target
 var spin_accel:SecondOrderDynamics
 
 ## Call this when the entity collides with something.
-func reset_forces() -> void:
-	if entity: velocity = entity.velocity
+func reset_forces(new_velocity:Vector2) -> void:
+	velocity = new_velocity
 	accel = SecondOrderDynamics.new(velocity)
 	spin_accel = SecondOrderDynamics.new(spin_velocity)
 
 # call every _physics_process
 func move(input: Vector2) -> void:
-	self.input += input
-	if self.input.length() > 1:
-		self.input = self.input.normalized()
+	move_input += input
+	if move_input.length() > 1:
+		move_input = move_input.normalized()
 	mode = Mode.Manual
 
 # call once
@@ -49,18 +47,17 @@ func spin(direction: float) -> void:
 func spin_to(desired_angle: float) -> void:
 	spin_target = desired_angle
 
-func _ready() -> void:
-	process_priority = -10
+func on_ready(entity:Entity) -> void:
 	if entity:
 		assert(entity is Entity)
 		velocity = entity.velocity
-	assert(!!stats, "motor must have Entity as a parent: " + utils.full_name(self))
+	assert(!!entity, "motor must have Entity as a parent: " + utils.full_name(self))
 	assert(!!stats, "KinematicStats unassigned in " + utils.full_name(self))
 	assert(stats is KinematicStats)
 	accel = SecondOrderDynamics.new(velocity)
 	spin_accel = SecondOrderDynamics.new(spin_velocity)
 
-func _physics_process(delta: float) -> void:
+func on_physics_process(entity:Entity, delta: float) -> void:
 	if !stats: return
 
 	if entity: velocity = entity.velocity
@@ -68,12 +65,12 @@ func _physics_process(delta: float) -> void:
 	# prepare input
 	var arrival: float = 0.0
 	if mode == Mode.Arrive:
-		var vector_to_point:Vector2 = destination - self.global_position
-		self.input = vector_to_point.normalized()
+		var vector_to_point:Vector2 = destination - entity.global_position
+		move_input = vector_to_point.normalized()
 		arrival = clamp(vector_to_point.length() / max(stats.arrive_distance, 0.1), 0, 1)
 		if stats.arrival_curve:
 			arrival = clamp(stats.arrival_curve.sample_baked(arrival), 0, 1)
-	var has_input := !input.is_zero_approx()
+	var has_input := !move_input.is_zero_approx()
 
 	# set throttle based on input
 	if has_input:
@@ -90,7 +87,7 @@ func _physics_process(delta: float) -> void:
 
 	# calc new velocity
 	var desired_speed:float = lerpf(stats.speed, max(stats.speed, stats.top_speed), top_speed_factor)
-	var desired_velocity := throttle * desired_speed * input
+	var desired_velocity := throttle * desired_speed * move_input
 	var momentum = utils.lerpdv2(velocity, Vector2.ZERO, stats.drag, delta)
 	var momentum_alignment:float = utils.dotnorm(momentum, desired_velocity)
 	if momentum_alignment < 0: momentum_alignment = momentum_alignment * -0.25
@@ -99,7 +96,7 @@ func _physics_process(delta: float) -> void:
 	desired_velocity = sluggishness.lerp(desired_velocity, stats.handling)
 	var v_calc = accel.compute(delta, stats.accel_constants, desired_velocity, velocity)
 	if mode == Mode.Manual:
-		velocity = momentum.lerp(v_calc, clamp(input.length() * throttle, 0, 1))
+		velocity = momentum.lerp(v_calc, clamp(move_input.length() * throttle, 0, 1))
 	elif mode == Mode.Arrive:
 		velocity = v_calc * arrival
 		var has_arrived := arrival <= Constants.EPSILON
@@ -127,7 +124,7 @@ func _physics_process(delta: float) -> void:
 		entity.velocity = velocity
 
 	# set state for next frame
-	input = Vector2.ZERO
+	move_input = Vector2.ZERO
 	spin_input = 0.0
 
 ## calculate modular difference, and remap to [-180, 180]
